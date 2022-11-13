@@ -1,0 +1,85 @@
+﻿
+
+Overview 
+
+This lab have a product API which is connected to Azure SQL to manaintain Data 
+
+
+Skills and service used 
+==========================
+1. Azure Sql 
+2. Azure App configuration - for storing Azure SQL COnnection string 
+--- Configuration explorer - SQL DB details to put here 
+--- Access Key - Used in .NET 
+3. Azure API Management
+--- 
+
+
+
+=============================================================================================================================
+How to use Azure App configuration
+=============================================================================================================================
+1. Create  Azure app configuration
+--Azure App Configuration lets you centrally manage application configuration and feature flags in the cloud
+
+
+2. In Azure App Configuration 
+---- Selct Configuration explorer- and update Azure SQL info as key value : 
+     -- Key - Used in .NET code , 
+     -- Value is SQL connection string  
+
+--- Selct Access keys - and select connection string value - used in .NET code 
+
+
+
+2. In .NET code -Install nugget package 
+--Microsoft.Extensions.Configuration.AzureAppConfiguration
+---Microsoft.Extensions.Configuration.AzureAppConfiguration is a configuration provider for the .NET Core framework 
+  that allows developers to use Microsoft Azure App Configuration service as a configuration source in their applications.
+
+3. In .NET code - Configure Programe file - DI work 
+
+    // Help to connect Azure App Configuration
+    // Azure app configuration  >>Access keys >> connections string
+    var connectionString = "Endpoint=https://appconfig1000233.azconfig.io;Id=E0j2-l8-s0:ywglWz9a/tngma/7q5/S;Secret=QA16TLCFkzE7j+BmvBnm/zlC2VJ/X4HqViAuA/PMHeQ=";
+    builder.Host.ConfigureAppConfiguration(builder =>
+    {
+        //Connect to your App Config Store using the connection string
+        builder.AddAzureAppConfiguration(connectionString);
+    });
+
+4. Whereever you need Sql connection string from  Azure app configuration use below 
+--_configuration["SQLConnection"] -- this SQLConnection is name created under app configuration configuration explorer section 
+    
+    private readonly IConfiguration _configuration;
+    public ProductService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        private SqlConnection GetConnection()
+        {
+
+            return new SqlConnection(_configuration["SQLConnection"]);
+        }
+
+=============================================================================================================================
+How to use Azure API management Service 
+=============================================================================================================================
+
+1. Create APIM with default setting 
+2. Select HTTP API to connect to WEB API 
+3. CReate operation for API created in step 2 
+4. Test it 
+
+
+Concept in APIM 
+-------------------------
+1.subscription key
+-- Needed to call API
+2.Product 
+
+3. URL ===============
+-- Gateway   - https://apimgateway2022.azure-api.net
+-- Managment - https://apimgateway2022.management.azure-api.net 
+-- Developer - https://apimgateway2022.developer.azure-api.net
+
